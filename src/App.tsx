@@ -1,26 +1,38 @@
 import React from 'react';
-import { Formik } from "formik";
+import { Formik, Field, Form } from "formik";
 import { TextField } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 
 const App: React.FC = () => {
   return (
     <div>
-      <Formik initialValues={{ firstName: 'bob' }} onSubmit={(data) => {
-        console.log('submit:', data);
-      }}
+      <Formik
+        initialValues={{ firstName: "", lastName: "" }}
+        onSubmit={(data, { setSubmitting }) => {
+          setSubmitting(true);
+          // Make async call
+          console.log('submit:', data);
+          setSubmitting(false);
+        }}
       >
-        {({ values, handleChange, handleBlur, handleSubmit }) => (
-          <form onSubmit={handleSubmit}>
-            <TextField
-              name="firstName"
-              value={values.firstName}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-            <Button type="submit">submit</Button>
+        {({ values, isSubmitting, handleChange, handleBlur, handleSubmit }) => (
+          <Form>
+            <div>
+              <Field placeholder="first name" name="firstName" type="input" as={TextField} />
+            </div>
+            <div>
+              <Field placeholder="last name" name="lastName" type="input" as={TextField} />
+            </div>
+            <div>
+              <Button
+                disabled={isSubmitting}
+                type="submit"
+              >
+                submit
+              </Button>
+            </div>
             <pre>{JSON.stringify(values, null, 2)}</pre>
-          </form>
+          </Form>
         )}
       </Formik>
     </div>
